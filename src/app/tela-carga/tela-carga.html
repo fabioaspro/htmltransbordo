@@ -1,0 +1,69 @@
+<po-toolbar p-title="1.00.000 - HTMLESRR033 - CARGA DE DADOS EM MASSA"></po-toolbar>
+
+<div class="cabec">
+    <div class="tipoBusca">
+        <!--
+        <po-button p-tooltip="Atualizar Tela" p-label="Atualizar"            (p-click)="ChamaObterDadosPag()" p-icon="bi bi-arrow-clockwise"    p-kind="primary" style="margin-left: 5px;"></po-button>
+        <po-button p-label="Novo"                 (p-click)="onNovo()"             p-icon="bi bi-bag-plus"           p-kind="primary" style="margin-left: 5px;" p-tooltip="Novo Transbordo"></po-button>
+        <po-button p-label="Excluir"              (p-click)="onNovo()"             p-icon="bi bi-trash"              p-kind="primary" style="margin-left: 5px;" p-tooltip="Excluir Selecionados"></po-button>
+        <po-button p-label="RPW"                  (p-click)="onNovo()"             p-icon="bi bi-box-arrow-up-right" p-kind="primary" style="margin-left: 5px;" p-tooltip="Relatório via RPW"></po-button>
+        -->
+        
+        <form [formGroup]="form">
+            
+            <!--
+            p-url="https://hawebdev.dieboldnixdorf.com.br:8543/api/integracao/import/v1/apiesim001/addFiles"
+            [p-url]="_url"
+            <po-button p-tooltip="Arquivo de Upload" name='btUpload' [p-disabled]="lBotao" style="margin-right: 50px" p-icon="po-icon po-icon-upload" p-kind="primary"  p-label="Upload" (p-click)="ChamaObterBRR()"></po-button>-->
+            <po-upload #upload
+                       name="upload"
+                       [p-url]="_url"
+                       p-icon="bi bi-cloud-upload"
+                       p-label="Selecione o Arquivo para Importação" 
+                       p-tooltip="Buscar arquivo para Carga"
+                       [p-headers]="headersTotvs"
+                       (p-upload)="ChamaUploadOk($event)"
+                       (p-error)="ChamaErro($event)"
+                       (p-success)="onObterArquivo()"
+                       
+                       [p-auto-upload]="true"
+                       [p-literals]="customLiteralsupload"
+                       (p-custom-action-click)="onCustomActionClick($event)"
+                    >                    
+                    </po-upload>
+
+            
+        </form>
+        
+    </div>
+    <div class="filtros-container">
+        <po-button p-label="Manutenção"                (p-click)="onManut()"            p-icon="bi bi-tools"             p-danger="true"  style="margin-left: 5px;" p-tooltip="Manutenção de Transbordo"></po-button>
+    </div>
+
+    <div class="grid">
+      <po-loading-overlay *ngIf="loadTela===true" [p-text]="labelLoadTela" [p-screen-lock]="true"></po-loading-overlay>
+      <!--<p style="font-size: 20px; font-weight: bold"><po-divider p-label="DADOS IMPORTADOS DO ARQUIVO"></po-divider></p>-->
+      <po-table #ttDadosImport
+                [p-items]="lista" 
+                [p-columns]="colunas"
+                [p-striped]="true" 
+                p-sort="true"
+                [p-sort]="true"
+                [p-hide-table-search]="false" 
+                [p-hide-columns-manager]="true" 
+                p-container="true"
+                [p-single-select]="false"
+                [p-selectable]="true"
+                [p-literals]="customLiterals"
+                [p-height]="alturaGrid" >
+                            
+        <ng-template p-table-cell-template let-column="column" let-row="row">
+            @if(column.property === 'opcao'){
+                <div class="menuGrid">
+                <div><button class="btn"  (click)="onAlterarGrid(row)"><p><i class="bi bi-eraser-fill"></i></p></button></div>
+                </div>
+            }
+        </ng-template>
+    </po-table>
+  </div>
+</div>
