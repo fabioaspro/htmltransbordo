@@ -4,11 +4,10 @@
 
 export const environment = {
   production: false,
-  totvs_url:    'https://hawebdev.dieboldnixdorf.com.br:8543/api/integracao/services/v1/apiesrr033', //desenv
-  totvs_url_01: 'https://hawebdev.dieboldnixdorf.com.br:8543/api/integracao/services/v1/apiesrr033', //desenv
-  //totvs_url_02: 'https://hawebdev.dieboldnixdorf.com.br:8543/api/integracao/aat/v1/apiesaa046', //desenv
-  //totvs_url: 'https://totvsapptst.dieboldnixdorf.com.br:8543/api/integracao/brr/v1/apicadleadtime',
-  //totvs_url: 'https://hawebdev.dieboldnixdorf.com.br:8143/api/integracao/brr/v1/apiesbrr001', //projetos
+  totvs_url:       'https://hawebdev.dieboldnixdorf.com.br:8543/api/integracao/services/v1/apiesrr033', //desenv
+  totvs_url_Geral: 'https://hawebdev.dieboldnixdorf.com.br:8543/api/integracao/utils/v1/apidngeral', //desenv
+  totvs_url_01:    'https://hawebdev.dieboldnixdorf.com.br:8543/api/integracao/services/v1/apiesrr033', //desenv
+  totvs46_url:     'https://hawebdev.dieboldnixdorf.com.br:8543/api/integracao/aat/v1/apiesaa046',
   totvs_header:{
     'Content-Type': 'application/json',
     'Authorization': 'Basic ' + btoa("super:prodiebold11"),

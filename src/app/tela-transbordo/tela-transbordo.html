@@ -1,7 +1,6 @@
 
 <po-toolbar p-title="1.00.000 - HTMLESRR033 - PARÂMETROS DE TRANSBORDO"></po-toolbar>
 
-
   <app-dn-modal
                 [visible]="mostrarModal"
                 title="Excluir registro"
@@ -22,9 +21,7 @@
     <div class="filtros-container">
 
       <form [formGroup]="form" class="campofiltros">
-        <po-combo [ngModel]="codEstabelecimento" 
-                  (ngModelChange)="codEstabelecimento = $event"
-                  formControlName="codEstabel"
+        <po-combo formControlName="codEstabel"
 
                   (p-change)="onEstabChange($event)" 
                   p-clean="true" 
@@ -44,8 +41,6 @@
           </ng-template>
         </po-combo>
         <po-combo p-label="Destino" 
-                  [ngModel]="codEmitente" 
-                  (ngModelChange)="codEmitente = $event"
                   formControlName="codEmit"
                   p-icon="bi bi-person-workspace" 
                   [p-options]="listaEmitente" 
@@ -68,8 +63,6 @@
 
         <po-combo class="combo-full"
                   p-label="Item" 
-                  [ngModel]="codItem" 
-                  (ngModelChange)="codItem = $event"
                   formControlName="codItem"
                   p-icon="bi bi-person-workspace" 
                   (p-change)="onItemChange($event)"
@@ -91,7 +84,10 @@
       <!--
       <p style="font-size: 15px; font-weight: bold; margin-bottom: -40px;">Total de Registros: {{this.total}}</p>
       -->
-      <p style="font-size: 15px; display: flex; justify-content: flex-end; margin-right: 260px; margin-bottom: -52px;">
+      <p style="font-size: 12px; display: flex; justify-content: flex-begins; margin-right: 260px; margin-bottom: -52px;">
+        <btnDownload p-tooltip="Baixar Arquivo do RPW" [nomeArquivo]="arquivoTransbordo" [mostrarNomeArquivo]="false" style="height: 52px;"></btnDownload>
+      </p>
+      <p style="font-size: 15px; display: flex; justify-content: flex-end; margin-right: 260px; margin-bottom: -52px;">        
         <po-button  p-tooltip="Listagem em Excel"  p-icon="an an-microsoft-excel-logo"  p-label=""  (p-click)="onExcel()"          p-kind="primary"> </po-button>
         <po-button  p-tooltip="Pesquisa Avançada"  p-icon="bi bi-funnel"                p-label=""  (p-click)="onFiltroAvancado()" p-kind="primary"> </po-button>
       </p>
@@ -119,8 +115,19 @@
             @if(column.property === 'opcao'){
                 <div class="menuGrid">
                   <div>
-                    <button class="btn"  (click)="onAlterar(row)"><p><i class="bi bi-eraser-fill"></i></p></button>
-                    <button class="btn"  (click)="solicitarExclusao(row)"><p><i class="bi bi-trash"></i></p></button>
+                    
+                    <span p-tooltip="Alterar" tooltip-position="top">
+                      <button class="btn" (click)="onAlterar(row)">
+                        <i class="bi bi-eraser-fill"></i>
+                      </button>
+                    </span>
+
+                    <span p-tooltip="Excluir" tooltip-position="top">
+                      <button class="btn" (click)="solicitarExclusao(row)">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </span>
+
                   </div>
                 </div>
                 
@@ -136,8 +143,16 @@
       <po-divider p-label="Dados:"></po-divider>
       
           <po-widget>
-              <po-combo [ngModel]="registroSelecionado.codEstabel" [p-disabled]="modoAlteracao" name="ComboEstabel" [p-options]="listaEstabelecimentos" p-icon="po-icon-manufacture"
-                  p-label="Estabelecimento" p-placeholder="Selecione um Estabelecimento">
+              <po-combo 
+                        [ngModel]="registroSelecionado.codEstabel"
+                        (p-change)="registroSelecionado.codEstabel = $event"
+                        name="codEstabel" 
+                        [p-disabled]="modoAlteracao" 
+                        
+                        [p-options]="listaEstabelecimentos" 
+                        p-icon="po-icon-manufacture"
+                        p-label="Estabelecimento"  
+                        p-placeholder="Selecione um Estabelecimento">
                   <ng-template p-combo-option-template let-option>
                       <div class="po-row">
           
@@ -150,8 +165,13 @@
                   </ng-template>
               </po-combo>
 
-              <po-combo [ngModel]="registroSelecionado.codEmitente" [p-disabled]="modoAlteracao" name="ComboEmitente" [p-options]="listaEmitente" p-icon="po-icon-manufacture"
-                  p-label="Destino" p-placeholder="Selecione um Destino">
+              <po-combo [ngModel]="registroSelecionado.codEmitente"
+                        (p-change)="registroSelecionado.codEmitente = $event"
+                        [p-disabled]="modoAlteracao" 
+                        name="codEmitente" 
+                        [p-options]="listaEmitente" 
+                        p-icon="po-icon-manufacture"
+                        p-label="Destino" p-placeholder="Selecione um Destino">
                   <ng-template p-combo-option-template let-option>
                       <div class="po-row">
           
@@ -166,13 +186,15 @@
   
               <div class="item-row">
 
-                <po-input [ngModel]="registroSelecionado.codItem" 
-                  p-disabled="{{ modoAlteracao }}"
-                  class="item-codigo"
-                  p-label="Item"
-                  name="Item"
-                  p-required
-                  (p-blur)="ChamaDescItem()">
+                <po-input [(ngModel)]="registroSelecionado.codItem" 
+                          name="codItem"
+                          p-disabled="{{ modoAlteracao }}"
+                          class="item-codigo"
+                          p-label="Item"
+                          p-required 
+                          p-mask="99.999.99999-9@" 
+                          p-mask-format-model="true"
+                          (p-blur)="ChamaDescItem()">
                 </po-input>
 
                 <po-button
@@ -184,10 +206,12 @@
                 </po-button>
 
                 <po-input [ngModel]="registroSelecionado.descItem"
-                  class="item-descricao"
-                  p-label="Descrição"
-                  [(ngModel)]="cDescItem"
-                  p-readonly>
+                          (p-change)="registroSelecionado.descItem = $event"
+                          name="descItem"
+                          class="item-descricao"
+                          p-label="Descrição"
+                          
+                          p-readonly>
                 </po-input>
 
               </div>
@@ -195,8 +219,15 @@
           <po-widget>
               <div class="item-row switch-row">
 
-                <po-datepicker [ngModel]="registroSelecionado.dtValidade" name="dtValidade" p-label="Data de Validade"> </po-datepicker>
-                <po-switch [ngModel]="registroSelecionado.lAtivo" name="lAtivo" p-label="Ativo"  p-label-off="Não" p-label-on="Sim"> </po-switch>
+                <po-datepicker [(ngModel)]="registroSelecionado.dtValidade" 
+                               name="dtValidade"
+                               p-label="Data de Validade"> </po-datepicker>
+                <po-switch [ngModel]="registroSelecionado.lAtivo" 
+                          name="lAtivo" 
+                          (p-change)="registroSelecionado.lAtivo = $event" 
+                          p-label="Ativo" 
+                          p-label-off="Nao" 
+                          p-label-on="Sim"> </po-switch>
 
               </div>
                 
@@ -204,7 +235,7 @@
 
       <po-modal-footer [p-disabled-align]="false">
           <po-button p-label="true" p-label="Cancelar" (p-click)="FecharChamaCadastro()"> </po-button>
-          <po-button p-kind="primary" p-label="Confirmar" (p-click)="Cadastro()"> </po-button>
+          <po-button p-kind="primary" p-label="Confirmar" (p-click)="onConfirmar()"> </po-button>
       </po-modal-footer>
 
   </po-modal>
@@ -233,7 +264,7 @@
       </div>
   </po-modal>
 
-  <po-modal #telaRPW p-title="Gerar relatório via RPW"
+  <po-modal #telaRPW p-title="Gerar relatório via RPW1"
                                 p-size="md" 
                                 p-click-out="false" 
                                 [p-hide-close]="true"
@@ -256,3 +287,15 @@
         <po-button p-tooltip="Limpar Filtros"  p-icon="bi bi-eraser-fill" p-label="Limpar filtros" (p-click)="limparFiltros()" [p-disabled]="!filtrosAlterados"> </po-button>
       </div>
   </po-modal>
+
+    <rpw-acomp [numPedExec]="numPedExec()" 
+               [intervalo]="5000" 
+               [tentativas]="50">
+    </rpw-acomp>
+
+    <po-modal #abrirArquivo [p-title]="nomeArquivo" p-size="auto" p-click-out="false" [p-primary-action]="acaoSair"
+                            [p-secondary-action]="acaoImprimir">
+  
+        <div innerHtml={{this.conteudoArquivo}} class="formatoTexto"></div>
+  
+    </po-modal>

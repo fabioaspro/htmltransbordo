@@ -2,56 +2,24 @@
 
     display: flex;
     gap: 10px;
-    width: 100%;
     justify-items: start;
-    align-items: last baseline;
-
-}
-
-.selecao {
-    display: flex;               /* 👈 ativa o flexbox */
-    align-items: center;         /* 👈 centraliza vertical */
+    align-items: last baseline;    
     
-    flex-grow: 1;
+}
+
+.campofiltrosc{
+
+    display: flex;
+    gap: 10px;
+    align-items: center;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 3px;
     border: 1px solid gray; 
     border-radius: 4px; 
-    padding: 0 20px;             /* ajusta padding */
-    height: 102px;
+    padding:10px; 
+    height: 100px;
+    width: 70%;
     background-color: whitesmoke;
-}
-
-.combo-full {
-  width: 100%;
-}
-
-.filtros-container {
-    display: flex;               /* 👈 ativa o flexbox */
-    align-items: center;         /* 👈 centraliza vertical */
-    gap: 4px;
-    flex-grow: 1;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 3px;
-    border: 1px solid gray; 
-    border-radius: 4px; 
-    padding: 0 20px;             /* ajusta padding */
-    height: 102px;
-    background-color: whitesmoke;
-}
-
-.combo-com-botao po-combo{
-  flex: 0; /* O combo cresce para ocupar espaço */
-  min-width: 500px;  
-}
-
-.filtros-container po-combo:nth-child(1),
-.filtros-container po-combo:nth-child(2){
-  flex: 0; /* O combo cresce para ocupar espaço */
-  min-width: 500px;  
-}
-.filtros-container po-combo:nth-child(3){
-  flex: 1; /* O combo cresce para ocupar espaço */
-  min-width: 100px;
-  width: 100px;  
+  
 }
 
 .cabec{
@@ -72,23 +40,16 @@
     width: 30%;
     background-color: whitesmoke;
     z-index: 99;
-    display: flex;
-    align-items: center;
 }
 
-.campofiltrosc{
-
-    display: flex;
-    gap: 10px;
-    align-items: center;
+.selecao{
+    flex-grow: 1;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 3px;
     border: 1px solid gray; 
     border-radius: 4px; 
-    padding:10px; 
-    height: 100px;
-    width: 70%;
+    padding:10px 0 10px 20px; 
+    height: 102px;
     background-color: whitesmoke;
-  
 }
 
 .grid{
@@ -96,4 +57,14 @@
     border-radius: 4px; 
     padding: 10px; 
     margin-top: 10px;
+}
+
+.upload-layout-container {
+  display: flex;
+  align-items: flex-end; /* alinha o botão embaixo do upload */
+  gap: 12px;
+}
+
+.upload-flex {
+  flex: 1; /* faz o upload ocupar o espaço restante */
 }

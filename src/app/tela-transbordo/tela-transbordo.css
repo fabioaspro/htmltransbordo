@@ -43,15 +43,34 @@
   min-width: 500px;  
 }
 
+/*antigo
 .filtros-container po-combo:nth-child(1),
 .filtros-container po-combo:nth-child(2){
-  flex: 0; /* O combo cresce para ocupar espaço */
+  flex: 0; 
   min-width: 500px;  
 }
 .filtros-container po-combo:nth-child(3){
-  flex: 1; /* O combo cresce para ocupar espaço */
+  flex: 1; 
   min-width: 100px;
   width: 100px;  
+}
+*/
+
+
+/* Estabelecimento */
+.filtros-container po-combo:nth-child(1) {
+  flex: 0 0 400px; /* largura fixa menor */
+}
+
+/* Destino (MENOR) */
+.filtros-container po-combo:nth-child(2) {
+  flex: 0 0 350px; /* 👈 diminui destino */
+}
+
+/* Item (MAIOR) */
+.filtros-container po-combo:nth-child(3) {
+  flex: 1 1 auto; /* 👈 ocupa o espaço restante */
+  min-width: 350px;
 }
 
 .cabec{

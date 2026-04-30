@@ -13,13 +13,22 @@ const headersTotvs = new HttpHeaders(environment.totvs_header)
 })
 export class ServerTotvsService {
   private reg!:any;
-  _url  = environment.totvs_url
-  _url1 = environment.totvs_url_01
+  _url      = environment.totvs_url
+  _urlGeral = environment.totvs_url_Geral
+  _url1     = environment.totvs_url_01
   //_url2 = environment.totvs_url_02
 
   constructor(private http: HttpClient ) { }
 
-  
+  public onObterRPW(params?: any){
+    return this.http.post(`${this._url}/onObterRPW`, params, {headers:headersTotvs}).pipe(take(1))  
+  }
+
+  //--- Obter Situação do RPW 
+  public piObterSituacaoRPW(params?: any){
+    return this.http.get(`${this._urlGeral}/piObterSituacaoRPW`, {params:params, headers:headersTotvs}).pipe(take(1));
+  }
+
   //---------------------- Variaveis Globais
   public ObterVariaveisGlobais(params?: any){
     return this.http.get(`${this._url}/ObterVariaveisGlobais`, {params, headers:headersTotvs}).pipe(take(1));
@@ -30,11 +39,13 @@ export class ServerTotvsService {
     return this.http.get('/totvs-menu/rest/exec', { params, headers: headersTotvs }).pipe(take(1));
   }
 
+  
+
   //------------ Colunas Grid Transbordo
   obterColunas(): Array<PoTableColumn> {
     return [
-      { property: 'iLinha',        label: "Linha", type: 'number', format: "1.0-0", visible: false},
-      { property: 'codEstabel',    label: "Estabelecimento"}, 
+      { property: 'iLinha',        label: "Linha", visible: false},
+      { property: 'codEstabel',    label: "Estabel"}, 
       { property: 'descEstabel',   label: "Descrição"},
       { property: 'codEmitente',   label: "Destino"}, 
       { property: 'descEmitente',  label: "Descrição"},
@@ -42,9 +53,26 @@ export class ServerTotvsService {
       { property: 'descItem',      label: "Descrição"},
       { property: 'lAtivo',        label: "Ativo"},
       { property: 'dtValidade',    label: "Validade"},
+      { property: 'opcao',         label: 'Ação', type: 'cellTemplate' },
       { property: 'DtHrUsInc',     label: "Inclusão"},
       { property: 'DtHrUsAlt',     label: "Alteração"},
+    ];
+  }
+  //------------ Colunas Grid Transbordo
+  obterColunasImp(): Array<PoTableColumn> {
+    return [
+      { property: 'iLinha',        label: "Linha", visible: false},
+      { property: 'codEstabel',    label: "Estabel"}, 
+      { property: 'descEstabel',   label: "Descrição"},
+      { property: 'codEmitente',   label: "Destino"}, 
+      { property: 'descEmitente',  label: "Descrição"},
+      { property: 'codItem',       label: "Item"}, 
+      { property: 'descItem',      label: "Descrição"},
+      { property: 'lAtivo',        label: "Ativo"},
+      { property: 'dtValidade',    label: "Validade"},
+      { property: 'DtHrUsInc',     label: "Resultado"},
       { property: 'opcao',         label: 'Ação', type: 'cellTemplate' },
+      { property: 'DtHrUsAlt',     label: "Alteração", visible: false},
     ];
   }
 
@@ -78,11 +106,35 @@ export class ServerTotvsService {
   
   //---Obter descrição do item
   public ObterDescItem(params?: any){
-    return this.http.get<any>(`${this._url}/PrDescItem`, {params: params, headers:headersTotvs}).pipe(
-                  map(item => { return item.items.map((item:any) =>  { return { label:item.codEmitente + ' ' + item.nomeAbrev, value: item.codEmitente, codFilial: item.codFilial } }) }), take(1));
+    return this.http.get<any>(`${this._urlGeral}/ObterDescItem`, {params:params, headers:headersTotvs}).pipe(take(1))
+      .pipe(take(1))
   }
 
-  //return this.http.get<any>("https://hawebdev.dieboldnixdorf.com.br:8543/api/integracao/mttr/v1/esrr001api/", {params: params, headers:headersTotvs})
+  //---Efetivar alteração/inclusão do Transbordo
+  public onSalvarTransbordo(params?: any){
+    return this.http.post(`${this._url}/onSalvarTransbordo`, params, {headers:headersTotvs}).pipe(take(1))
+  }
+
+ //---------------------- Obter Lista Completa
+  public UpdloadArquivo(params?: any){
+    return this.http.post(`${this._url}/addFiles`, params, {headers:headersTotvs}).pipe(take(1))
+  }
+
+  //---------------------- Obter Lista Completa
+  public EfetivarArquivo(params?: any){
+    return this.http.post(`${this._url}/EfetivarArquivo`, params, {headers:headersTotvs}).pipe(take(1))
+  }
+
+  //--- Obter Lista Completa
+  public ObterArquivoImp(params?: any){
+    return this.http.get(`${this._url}/ObterArquivoImp`, {params:params, headers:headersTotvs}).pipe(take(1));
+  }
+  
+  //--- Obter Lista Completa
+  public ObterArquivo(params?: any){
+    return this.http.get(`${this._url}/ObterArquivo`, {params:params, headers:headersTotvs}).pipe(take(1));
+  }
+  //---Tela de Transbordo acima
 
   //------------ Colunas Grid ESRR033
   obterColunasmttr(): Array<PoTableColumn> {
@@ -184,25 +236,10 @@ export class ServerTotvsService {
   public ObterTecLab(params?: any){
     return this.http.post(`${this._url}/addFiles`, params, {headers:headersTotvs}).pipe(take(1))
   }
-
-  //---------------------- Obter Lista Completa
-  public UpdloadArquivo(params?: any){
-    return this.http.post(`${this._url}/addFiles`, params, {headers:headersTotvs}).pipe(take(1))
-  }
-
-  //---------------------- Obter Lista Completa
-  public EfetivarArquivo(params?: any){
-    return this.http.post(`${this._url}/EfetivarArquivo`, params, {headers:headersTotvs}).pipe(take(1))
-  }
   
   //Chama tela do TOTVS
   public ObterCadastro(params?: any){
     return this.http.get(`${this._url}/ObterCadastro`, {params:params, headers:headersTotvs}).pipe(take(1));
-  }
-
-  //--- Obter Lista Completa
-  public ObterArquivo(params?: any){
-    return this.http.get(`${this._url}/ObterArquivo`, {params:params, headers:headersTotvs}).pipe(take(1));
   }
 
   public ObterFilialOrigem(params?: any){
