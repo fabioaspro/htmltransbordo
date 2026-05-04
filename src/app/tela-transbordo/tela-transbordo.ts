@@ -5,7 +5,7 @@ import { AfterViewInit, NgZone, ChangeDetectorRef, Component, ElementRef, inject
 import { RouterOutlet, Router, ɵEmptyOutletComponent } from '@angular/router';
 import { finalize, map, Subscription, timeInterval } from 'rxjs';
 import { FormBuilder, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PoWidgetModule, PoUploadComponent, PoModule, PoUploadFile, PoTableColumn, PoTableModule, PoButtonModule, PoMenuItem, PoMenuModule, PoModalModule, PoPageModule, PoToolbarModule, PoTableAction, PoModalAction, PoDialogService, PoNotificationService, PoFieldModule, PoDividerModule, PoTableLiterals, PoTableComponent, PoUploadLiterals, PoModalComponent, PoInputComponent, PoComboModule, PoIconModule, PoLoadingModule, PoDialogModule, PoDialogAlertLiterals, PoDialogConfirmLiterals, PoAccordionModule, PoTooltipModule } from '@po-ui/ng-components';
+import { PoWidgetModule, PoUploadComponent, PoModule, PoUploadFile, PoTableColumn, PoTableModule, PoButtonModule, PoMenuItem, PoMenuModule, PoModalModule, PoPageModule, PoToolbarModule, PoTableAction, PoModalAction, PoDialogService, PoNotificationService, PoFieldModule, PoDividerModule, PoTableLiterals, PoTableComponent, PoUploadLiterals, PoModalComponent, PoInputComponent, PoComboModule, PoIconModule, PoLoadingModule, PoDialogModule, PoDialogAlertLiterals, PoDialogConfirmLiterals, PoAccordionModule, PoTooltipModule, PoToolbarAction } from '@po-ui/ng-components';
 import { environment } from '../environments/environment'
 import { ServerTotvsService } from '../services/server-totvs.service'
 import { ExcelService } from '../services/excel-service.service'
@@ -14,6 +14,7 @@ import { DnModal } from "../dn-modal/dn-modal"
 import { RpwComponent } from '../rpw/rpw.component';
 import { BtnDownloadComponent } from '../btn-download/btn-download.component';
 import { TotvsService46 } from '../services/totvs-service-46.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 interface TransbordoForm {
   codEstabel: string | null
@@ -43,7 +44,8 @@ interface ValidacaoResultado {
 })
 export class TelaTransbordo {
 
-  constructor(private cdr:      ChangeDetectorRef) {}
+  constructor(private cdr:      ChangeDetectorRef,
+              private sanitizer: DomSanitizer) {}
 
   private srvDialog       = inject(PoDialogService)
   private srvTotvs        = inject(ServerTotvsService)
@@ -62,7 +64,6 @@ export class TelaTransbordo {
   labelLoadTela: string = ''
   loadTela:  boolean = false
   loadExcel: boolean = false
-
   
   //--- Controle do acompanhamento RPW
   numPedExec         = signal(0)
@@ -136,6 +137,9 @@ export class TelaTransbordo {
   loadModal = false
   urlSpool: string = ''
 
+  //---Funcionar o visualizar PDF
+  pdfUrl?: SafeResourceUrl | undefined
+  
   //Filtros Avançados
   filtro = {
     
@@ -182,6 +186,35 @@ export class TelaTransbordo {
   })
 
   //--- Actions
+  readonly toolbarActions: Array<PoToolbarAction> = [
+      {
+        icon: 'bi bi-book',
+        label: 'Manual do Usuário',
+        action: this.abrirAjuda.bind(this)
+      },
+      {
+        icon: 'bi bi-file-earmark-code',
+        label: 'Documentação Técnica',
+        action: this.abrirDocto.bind(this)
+      }
+    ];
+
+    abrirAjuda() {
+      const fileUrl = 'assets/docs/ManualTransbordo.pdf'
+    
+      this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(fileUrl)
+      this.pdfModal?.open()
+    }
+
+    abrirDocto() {
+      const fileUrl = 'assets/docs/TecnicoTransbordo.pdf'
+    
+      this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(fileUrl)
+      this.pdfModal?.open()
+    }
+
+    @ViewChild('pdfModal', { static: true }) pdfModal: PoModalComponent | undefined;
+
   acaoImprimir: PoModalAction = {
     action: () => {
       this.onImprimirConteudoArquivo();

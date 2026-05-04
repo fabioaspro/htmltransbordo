@@ -496,7 +496,9 @@ export class Telacarga {
 
     this.loadExcel = false
   }
+  
   //---Listar registros grid
+  /*
   listar() {
     this.loadTela = true
 
@@ -514,7 +516,7 @@ export class Telacarga {
       },
     });
   }
-
+  */
   //Chama tela do TOTVS
   public AbrirTelaTOTVS(programa: string): void {
     let params: any = { program: programa, params: '' };
@@ -546,7 +548,8 @@ export class Telacarga {
   }
 
   //---Deletar registro
-  onDeletar(obj: any | null) {
+  /*
+  OLD_onDeletar(obj: any | null) {
     let paramTela: any = { codEstabel: obj.codEstabel }
 
     this.srvDialog.confirm({
@@ -554,7 +557,7 @@ export class Telacarga {
       message: `Confirma deleção do registro: ${obj.nomeEstabel} ?`,
       confirm: () => {
         this.loadTela = true
-        this.srvTotvs.Deletar(paramTela).subscribe({
+        this.srvTotvs.OLD_Deletar(paramTela).subscribe({
           next: (response: any) => {
             this.srvNotification.success('Registro eliminado com sucesso')
             this.listar()
@@ -564,7 +567,7 @@ export class Telacarga {
       },
       cancel: () => this.srvNotification.error("Cancelada pelo usuário")
     })
-  }
+  }*/
   
   normalizeAtivo(valor: string): string {
     return valor

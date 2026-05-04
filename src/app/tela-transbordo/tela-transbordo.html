@@ -1,5 +1,8 @@
 
-<po-toolbar p-title="1.00.000 - HTMLESRR033 - PARÂMETROS DE TRANSBORDO"></po-toolbar>
+<po-toolbar p-title="1.00.000 - HTMLESRR033 - PARÂMETROS DE TRANSBORDO"
+  p-actions-icon="bi bi-question-circle"
+  [p-actions]="toolbarActions">
+</po-toolbar>
 
   <app-dn-modal
                 [visible]="mostrarModal"
@@ -298,4 +301,8 @@
   
         <div innerHtml={{this.conteudoArquivo}} class="formatoTexto"></div>
   
+    </po-modal>
+    
+    <po-modal #pdfModal p-title="Visualizar Documento" p-primary-action-label="Fechar">
+      <iframe *ngIf="pdfUrl" [src]="pdfUrl" width="100%" height="900px" style="border: none;"></iframe>
     </po-modal>

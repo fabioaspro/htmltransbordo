@@ -20,27 +20,6 @@ export class ServerTotvsService {
 
   constructor(private http: HttpClient ) { }
 
-  public onObterRPW(params?: any){
-    return this.http.post(`${this._url}/onObterRPW`, params, {headers:headersTotvs}).pipe(take(1))  
-  }
-
-  //--- Obter Situação do RPW 
-  public piObterSituacaoRPW(params?: any){
-    return this.http.get(`${this._urlGeral}/piObterSituacaoRPW`, {params:params, headers:headersTotvs}).pipe(take(1));
-  }
-
-  //---------------------- Variaveis Globais
-  public ObterVariaveisGlobais(params?: any){
-    return this.http.get(`${this._url}/ObterVariaveisGlobais`, {params, headers:headersTotvs}).pipe(take(1));
-  }
-
-  //Chama tela do TOTVS
-  public AbrirTelaTOTVS(params?:any){
-    return this.http.get('/totvs-menu/rest/exec', { params, headers: headersTotvs }).pipe(take(1));
-  }
-
-  
-
   //------------ Colunas Grid Transbordo
   obterColunas(): Array<PoTableColumn> {
     return [
@@ -58,7 +37,7 @@ export class ServerTotvsService {
       { property: 'DtHrUsAlt',     label: "Alteração"},
     ];
   }
-  //------------ Colunas Grid Transbordo
+  //------------ Colunas Grid Importação
   obterColunasImp(): Array<PoTableColumn> {
     return [
       { property: 'iLinha',        label: "Linha", visible: false},
@@ -71,9 +50,14 @@ export class ServerTotvsService {
       { property: 'lAtivo',        label: "Ativo"},
       { property: 'dtValidade',    label: "Validade"},
       { property: 'DtHrUsInc',     label: "Resultado"},
-      { property: 'opcao',         label: 'Ação', type: 'cellTemplate' },
+      { property: 'opcao',         label: 'Ação', type: 'cellTemplate', visible: false},
       { property: 'DtHrUsAlt',     label: "Alteração", visible: false},
     ];
+  }
+
+  //--- url
+  public onObterRPW(params?: any){
+    return this.http.post(`${this._url}/onObterRPW`, params, {headers:headersTotvs}).pipe(take(1))  
   }
 
   //Retorno transformado no formato {label: xxx, value: yyyy}
@@ -93,21 +77,10 @@ export class ServerTotvsService {
       );
   }
 
-  //--- Procedure POST
-  public onExcluirSel(params?: any) {
-      return this.http.post(`${this._url}/onExcluirSel`, params, { headers: headersTotvs }).pipe(take(1))
-  }
-  
   //Retorno transformado no formato {label: xxx, value: yyyy}
   public ObterEmitente(params?: any){
     return this.http.get<any>(`${this._url}/ObterEmitente`, {params: params, headers:headersTotvs}).pipe(
                   map(item => { return item.items.map((item:any) =>  { return { label:item.codEmitente + ' ' + item.nomeAbrev, value: item.codEmitente, codFilial: item.codFilial } }) }), take(1));
-  }
-  
-  //---Obter descrição do item
-  public ObterDescItem(params?: any){
-    return this.http.get<any>(`${this._urlGeral}/ObterDescItem`, {params:params, headers:headersTotvs}).pipe(take(1))
-      .pipe(take(1))
   }
 
   //---Efetivar alteração/inclusão do Transbordo
@@ -115,12 +88,17 @@ export class ServerTotvsService {
     return this.http.post(`${this._url}/onSalvarTransbordo`, params, {headers:headersTotvs}).pipe(take(1))
   }
 
- //---------------------- Obter Lista Completa
+  //--- Procedure POST
+  public onExcluirSel(params?: any) {
+      return this.http.post(`${this._url}/onExcluirSel`, params, { headers: headersTotvs }).pipe(take(1))
+  }
+  
+  //---Upload do arquivo
   public UpdloadArquivo(params?: any){
     return this.http.post(`${this._url}/addFiles`, params, {headers:headersTotvs}).pipe(take(1))
   }
 
-  //---------------------- Obter Lista Completa
+  //---Efetivar arquivo
   public EfetivarArquivo(params?: any){
     return this.http.post(`${this._url}/EfetivarArquivo`, params, {headers:headersTotvs}).pipe(take(1))
   }
@@ -129,15 +107,74 @@ export class ServerTotvsService {
   public ObterArquivoImp(params?: any){
     return this.http.get(`${this._url}/ObterArquivoImp`, {params:params, headers:headersTotvs}).pipe(take(1));
   }
-  
-  //--- Obter Lista Completa
+
+  //--- Obter Arquivo
   public ObterArquivo(params?: any){
     return this.http.get(`${this._url}/ObterArquivo`, {params:params, headers:headersTotvs}).pipe(take(1));
   }
+  
+  //Usando paginação
+  public ObterDadosPag(params?: any){
+    return this.http.post(`${this._url}/ObterDadosPag`, params, {headers:headersTotvs}).pipe(take(1))
+  }
+
+  //############
+  //--- urlGeral
+  //--- Obter Situação do RPW 
+  public piObterSituacaoRPW(params?: any){
+    return this.http.get(`${this._urlGeral}/piObterSituacaoRPW`, {params:params, headers:headersTotvs}).pipe(take(1));
+  }
+
+  //---Obter descrição do item
+  public ObterDescItem(params?: any){
+    return this.http.get<any>(`${this._urlGeral}/ObterDescItem`, {params:params, headers:headersTotvs}).pipe(take(1))
+      .pipe(take(1))
+  }
+
+  //Chama tela do TOTVS
+  public AbrirTelaTOTVS(params?:any){
+    return this.http.get('/totvs-menu/rest/exec', { params, headers: headersTotvs }).pipe(take(1));
+  }
+
+   //Ordenacao campos num array
+  public ordenarCampos = (fields: any[]) =>
+    (a: { [x: string]: number }, b: { [x: string]: number }) =>
+      fields
+        .map((o) => {
+          let dir = 1;
+          if (o[0] === '-') {
+            dir = -1;
+            o = o.substring(1);
+          }
+          return a[o] > b[o] ? dir : a[o] < b[o] ? -dir : 0;
+        })
+        .reduce((p, n) => (p ? p : n), 0)
+
+  //#############
+  //--- Não usado
+
+  //---------------------- Variaveis Globais
+  public OLD_ObterVariaveisGlobais(params?: any){
+    return this.http.get(`${this._url}/ObterVariaveisGlobais`, {params, headers:headersTotvs}).pipe(take(1));
+  }
+
+  
+
+  
+
+  
+
+  
+  
+  
+
+  
+  
+  
   //---Tela de Transbordo acima
 
   //------------ Colunas Grid ESRR033
-  obterColunasmttr(): Array<PoTableColumn> {
+  OLD_obterColunasmttr(): Array<PoTableColumn> {
     return [
       { property: 'cScan',            label: "cScan", visible:false},
       { property: 'codEstabel',       label: "Estab"},
@@ -155,7 +192,7 @@ export class ServerTotvsService {
   }
 
   //------------ Colunas Grid ESRR033B
-  obterColunasPed(): Array<PoTableColumn> {
+  OLD_obterColunasPed(): Array<PoTableColumn> {
     return [
       { property: 'codEstabel',       label: "Estab"},
       { property: 'nrPedCli',         label: "Ped.Cliente"},
@@ -169,7 +206,7 @@ export class ServerTotvsService {
   }
 
   //------------ Colunas Grid ESAA052
-  obterColunasRPD(): Array<PoTableColumn> {
+  OLD_obterColunasRPD(): Array<PoTableColumn> {
     return [
       { property: 'tecLab',        label: "Técnico LAB"},
       { property: 'dataRPD',       label: "Data"},
@@ -183,7 +220,7 @@ export class ServerTotvsService {
     ];
   }
 
-  obterColunasItens(): Array<PoTableColumn> {
+  OLD_obterColunasItens(): Array<PoTableColumn> {
     return [
       { property: 'Componente',      label: "Componente"},
       { property: 'Descricao',       label: "Descrição"},
@@ -193,7 +230,7 @@ export class ServerTotvsService {
     ];
   }
 
-  obterColunasErrorEsaa052(): Array<PoTableColumn> {
+  OLD_obterColunasErrorEsaa052(): Array<PoTableColumn> {
     return [
       { property: 'idBatch',       label: "ID", type: 'number', format: "1.0-0", visible: false},
       { property: 'SeqError',      label: "Seq"},
@@ -204,7 +241,7 @@ export class ServerTotvsService {
   }
 
   //------------ Colunas Grid ESAA068
-  obterColunasEsaa068(): Array<PoTableColumn> {
+  OLD_obterColunasEsaa068(): Array<PoTableColumn> {
     return [
       { property: 'idBatch',       label: "IDBatch", type: 'number', format: "1.0-0", visible: false},
       { property: 'Chave',         label: "Chave", visible: true},
@@ -223,7 +260,7 @@ export class ServerTotvsService {
     ];
   }
 
-  obterColunasErrorEsaa068(): Array<PoTableColumn> {
+  OLD_obterColunasErrorEsaa068(): Array<PoTableColumn> {
     return [
       { property: 'idBatch',       label: "ID", type: 'number', format: "1.0-0", visible: false},
       { property: 'SeqError',      label: "Seq"},
@@ -233,33 +270,33 @@ export class ServerTotvsService {
     ];
   }
   //---------------------- Obter Lista Completa
-  public ObterTecLab(params?: any){
+  public OLD_ObterTecLab(params?: any){
     return this.http.post(`${this._url}/addFiles`, params, {headers:headersTotvs}).pipe(take(1))
   }
   
   //Chama tela do TOTVS
-  public ObterCadastro(params?: any){
+  public OLD_ObterCadastro(params?: any){
     return this.http.get(`${this._url}/ObterCadastro`, {params:params, headers:headersTotvs}).pipe(take(1));
   }
 
-  public ObterFilialOrigem(params?: any){
+  public OLD_ObterFilialOrigem(params?: any){
     return this.http.get<any>(`${this._url}/ObterFilialOrigem`, {params: params, headers:headersTotvs}).pipe(
                   map(item => { return item.items.map((item:any) =>  { return { label:item.codEstab + ' ' + item.nome, value: item.codEstab, codFilial: item.codFilial } }) }), take(1));
   }
 
   //Chama obter usuario
-  public ObterUsuario(params?: any){
+  public OLD_ObterUsuario(params?: any){
     return this.http.post(`${this._url}/ObterUsuario`, params, {headers:headersTotvs}).pipe(take(1))
   }
 
   
-  public ObterImprimePd(params?: any){
+  public OLD_ObterImprimePd(params?: any){
     return this.http.post(`${this._url}/ObterImprimePd`, params, {headers:headersTotvs}).pipe(take(1))
   }
   
 
   //Colunas do Log de Arquivos
-  obterColunasArquivos(): Array<PoTableColumn> {
+  OLD_obterColunasArquivos(): Array<PoTableColumn> {
   return [
     {property: 'nomeArquivo', label: "Arquivo", type: 'columnTemplate'},
     {property: 'mensagem',    label: "Descrição"},
@@ -267,64 +304,56 @@ export class ServerTotvsService {
     {property: 'numPedExec',  label: "PedExec"},
   ];
 }
-  
-  //Usando paginação
-  public ObterDadosPag(params?: any){
-    return this.http.post(`${this._url}/ObterDadosPag`, params, {headers:headersTotvs}).pipe(take(1))
-  }
-
   //---------------------- Obter Lista Completa
-  public ObterLeave(params?: any){
+  public OLD_ObterLeave(params?: any){
     return this.http.post(`${this._url}/ObterLeave`, params, {headers:headersTotvs}).pipe(take(1))
   }
   
   //---------------------- Obter Lista Completa
-  public ObterDadosReparo(params?: any){
+  public OLD_ObterDadosReparo(params?: any){
     return this.http.post(`${this._url}/ObterDadosReparo`, params, {headers:headersTotvs}).pipe(take(1))
   }
 
   //---------------------- Obter Lista Completa
-  public ObterDadosRelPed(params?: any){
+  public OLD_ObterDadosRelPed(params?: any){
     return this.http.post(`${this._url}/ObterDadosRelPed`, params, {headers:headersTotvs}).pipe(take(1))
   }
   
   //---------------------- Validar Numero de Série do Item
-  public validaSerie(params?: any){
+  public OLD_validaSerie(params?: any){
     return this.http.post(`${this._url}/validaSerie`, params, {headers:headersTotvs}).pipe(take(1))
   }
   
   //---------------------- Obter Lista Completa
-  public EfetivarPedido(params?: any){
+  public OLD_EfetivarPedido(params?: any){
     return this.http.post(`${this._url}/EfetivarPedido`, params, {headers:headersTotvs}).pipe(take(1))
   }
 
-  public ObterDadosEsaa052(params?: any){
+  public OLD_ObterDadosEsaa052(params?: any){
     return this.http.post(`${this._url}/ObterDadosEsaa052`, params, {headers:headersTotvs}).pipe(take(1))
   }
 
-  public ObterDadosErrorEsaa052(params?: any){
+  public OLD_ObterDadosErrorEsaa052(params?: any){
     return this.http.post(`${this._url}/ObterDadosErrorEsaa052`, params, {headers:headersTotvs}).pipe(take(1))
   }
 
-  
-
   //---------------------- Obter Lista Completa
-  public ObterDadosEsaa068(params?: any){
+  public OLD_ObterDadosEsaa068(params?: any){
     return this.http.post(`${this._url}/ObterDadosEsaa068`, params, {headers:headersTotvs}).pipe(take(1))
   }
 
-  public ObterDadosErrorEsaa068(params?: any){
+  public OLD_ObterDadosErrorEsaa068(params?: any){
     return this.http.post(`${this._url}/ObterDadosErrorEsaa068`, params, {headers:headersTotvs}).pipe(take(1))
   }
 
   //Usando paginação
-  public ObterDadosPagEsaa068(params?: any){
+  public OLD_ObterDadosPagEsaa068(params?: any){
     return this.http.post(`${this._url}/ObterDadosPagEsaa068`, params, {headers:headersTotvs}).pipe(take(1))
   }
   
   //abaixo não é usado, só exemplo
   //------------ Colunas Grid Prioridade
-  obterColunasEmergencial(): Array<PoTableColumn> {
+  OLD_obterColunasEmergencial(): Array<PoTableColumn> {
     return [         
       { property: 'Ativo', label: 'Ativo', type: 'subtitle',
         subtitles: [
@@ -342,43 +371,31 @@ export class ServerTotvsService {
   }
   
   //---------------------- Obter Lista Completa
-  public ObterBRR(params?: any){
+  public OLD_ObterBRR(params?: any){
     return this.http.post(`${this._url}/ObterBRR`, params, {headers:headersTotvs}).pipe(take(1))
   }
 
   //---------------------- Obter Lista Completa
-  public Obter(params?: any){
+  public OLD_Obter(params?: any){
     return this.http.get(`${this._url}/ObterLT`, {params:params, headers:headersTotvs}).pipe(take(1));
   }
 
   //---------------------- Obter Linha Editada
-  public ObterID(params?: any){
+  public OLD_ObterID(params?: any){
     return this.http.get(`${this._url}/ObterLTId`, {params:params, headers:headersTotvs}).pipe(take(1));
   }
   //---------------------- Salvar registro
-  public Salvar(params?: any){
+  public OLD_Salvar(params?: any){
     return this.http.post(`${this._url}/SalvarLT`, params, {headers:headersTotvs})
                 .pipe(take(1));
   }
 
   //---------------------- Deletar registro
-  public Deletar(params?: any){
+  public OLD_Deletar(params?: any){
     return this.http.get(`${this._url}/DeletarEmergencial`, {params:params, headers:headersTotvs})
                     .pipe(take(1));
   }
   
-  //Ordenacao campos num array
-  public ordenarCampos = (fields: any[]) =>
-    (a: { [x: string]: number }, b: { [x: string]: number }) =>
-      fields
-        .map((o) => {
-          let dir = 1;
-          if (o[0] === '-') {
-            dir = -1;
-            o = o.substring(1);
-          }
-          return a[o] > b[o] ? dir : a[o] < b[o] ? -dir : 0;
-        })
-        .reduce((p, n) => (p ? p : n), 0);
+ 
 
 }
