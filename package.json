@@ -24,6 +24,7 @@
     "bootstrap-icons": "^1.13.1",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
+    "ngx-extended-pdf-viewer": "^27.0.0",
     "ngx-mask": "^21.0.1",
     "path": "^0.12.7",
     "querystring": "^0.2.1",

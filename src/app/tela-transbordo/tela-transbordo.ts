@@ -16,6 +16,8 @@ import { BtnDownloadComponent } from '../btn-download/btn-download.component';
 import { TotvsService46 } from '../services/totvs-service-46.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+
 interface TransbordoForm {
   codEstabel: string | null
   codEmitente: string | null
@@ -37,7 +39,8 @@ interface ValidacaoResultado {
     PoComboModule, PoIconModule, PoTableModule, PoModalModule, PoFieldModule, PoDividerModule, PoLoadingModule,
     PoModule, CommonModule, PoDialogModule, DnRangeComponent, CommonModule, PoAccordionModule, ReactiveFormsModule,
     FormsModule,  PoTableModule, PoModule, PoFieldModule,  
-    PoToolbarModule, PoMenuModule, PoPageModule, HttpClientModule, DnModal,RpwComponent, BtnDownloadComponent , PoTooltipModule 
+    PoToolbarModule, PoMenuModule, PoPageModule, HttpClientModule, DnModal,RpwComponent, BtnDownloadComponent , PoTooltipModule,
+    NgxExtendedPdfViewerModule
 ],
   templateUrl: './tela-transbordo.html',
   styleUrl: './tela-transbordo.css',
