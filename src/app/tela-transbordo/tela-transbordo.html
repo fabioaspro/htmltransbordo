@@ -1,5 +1,5 @@
 
-<po-toolbar p-title="1.00.000 - HTMLESRR033 - PARÂMETROS DE TRANSBORDO"
+<po-toolbar p-title="1.00.001 - HTMLESRR033 - PARÂMETROS DE TRANSBORDO"
   p-actions-icon="bi bi-question-circle"
   [p-actions]="toolbarActions">
 </po-toolbar>
@@ -14,18 +14,19 @@
 
   <div class="cabec">
     <div class="tipoBusca">
-        <po-button p-tooltip="Atualizar Tela" p-label="Atualizar"            (p-click)="ChamaObterDadosPag()" p-icon="bi bi-arrow-clockwise"    p-kind="primary" style="margin-left: 5px;"></po-button>
-        <po-button p-label="Novo"                 (p-click)="onIncluir('Inclusão')"             p-icon="bi bi-bag-plus"           p-kind="primary" style="margin-left: 5px;" p-tooltip="Novo Transbordo"></po-button>
-        <po-button p-label="Excluir"              (p-click)="onExcluirSelecionados()"             p-icon="bi bi-trash"              p-kind="primary" style="margin-left: 5px;" p-tooltip="Excluir Selecionados"></po-button>
-        <po-button p-label="RPW"                  (p-click)="onRPW()"             p-icon="bi bi-box-arrow-up-right" p-kind="primary" style="margin-left: 5px;" p-tooltip="Relatório via RPW"></po-button>
-        <po-button p-label="Carga"                (p-click)="onCarga()"            p-icon="bi bi-upload"             p-danger="true"  style="margin-left: 5px;" p-tooltip="Cadastro via Carga"></po-button>
+      <po-button p-label="Atualizar"   (p-click)="ChamaObterDadosPag()"       p-icon="bi bi-arrow-clockwise"    p-kind="primary" style="margin-left: 5px;"  p-tooltip="Atualizar Tela" ></po-button>
+      <po-button p-label="Novo"        (p-click)="onIncluir('Inclusão')"  p-icon="bi bi-bag-plus"           p-kind="primary" style="margin-left: 5px;" p-tooltip="Novo Transbordo"></po-button>
+      <po-button p-label="Excluir"     (p-click)="onExcluirSelecionados()"    p-icon="bi bi-trash"              p-kind="primary" style="margin-left: 5px;" p-tooltip="Excluir Selecionados"></po-button>
+      <po-button p-label="RPW"         (p-click)="onRPW()"                    p-icon="bi bi-box-arrow-up-right" p-kind="primary" style="margin-left: 5px;" p-tooltip="Relatório via RPW"></po-button>
+      <po-button p-label="Carga"       (p-click)="onCarga()"                  p-icon="bi bi-upload"             p-danger="true"  style="margin-left: 5px;" p-tooltip="Cadastro via Carga"></po-button>
         
     </div>
     <div class="filtros-container">
 
       <form [formGroup]="form" class="campofiltros">
         <po-combo formControlName="codEstabel"
-
+                  p-append-to-body="true"
+                    p-dropdown-width="auto"
                   (p-change)="onEstabChange($event)" 
                   p-clean="true" 
                   [p-options]="listaEstabelecimentos"
